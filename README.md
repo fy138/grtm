@@ -2,10 +2,10 @@
 [![Build Status](https://travis-ci.org/fy138/grtm.svg?branch=master)](https://travis-ci.org/fy138/grtm)
 
 grtm is a tool to manage golang goroutines.use this can start or stop a long loop goroutine.
-*by fy138
-*增加了查询任务的数量
-*增加了当前任务列表
-*去掉了 nosignal 提示，方便使用在产品中
+* by fy138
+* 增加了查询任务的数量
+* 增加了当前任务列表
+* 去掉了 nosignal 提示，方便使用在产品中
 ## Getting started
 ```bash
 go get github.com/fy138/grtm
@@ -151,6 +151,21 @@ func main() {
 		time.Sleep(time.Second * 5)
 	}
 }
+```
+output
 
-
+```bash
+hello+1
+hello+2
+hello+1
+hello+2
+hello+1
+hello+2
+task name:myfunc,task id:5577006791947779410,task name2:myfunc
+task name:myfunc2,task id:8674665223082153551,task name2:myfunc2
+NumTask:2
+hello+1
+hello+2
+hello+1
+hello+2
 ```
