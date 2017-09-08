@@ -198,8 +198,7 @@ func main() {
 		fmt.Println("I=", i)
 		//通过通道来限制goroutine 数量，下面这一行不要忘记了
 		pool.LimtChan <- true //importan
-		pool.AddTask(Download, i, "test"
-		)
+		pool.AddTask(Download, i, "test")
 		/*如果你觉得上面传参数比较麻烦，那么可以把
 		pool.AddTask(Download, i, "test")
 		替换为
