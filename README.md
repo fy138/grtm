@@ -221,3 +221,27 @@ func Download(url int) {
 	fmt.Printf("Download:%d\n", url)
 }
 ```
+```bash
+>grtm_test3.exe
+go goroutines: 6
+go goroutines: 6
+Download:97
+Download:97
+Download:97
+go goroutines: 6
+Download:96
+Download:95
+Download:94
+go goroutines: 6
+Download:93
+Download:92
+Download:91
+go goroutines: 6
+Download:90
+Download:89
+Download:88
+go goroutines: 6
+Download:87
+Download:86
+Download:85
+```
