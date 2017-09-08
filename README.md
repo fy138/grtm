@@ -205,12 +205,12 @@ func main() {
 			Download(i)
 		})               
                 替换为以下这种写法也可以的
-                go func() {
+                go func(i int) {
 			Download(i)
 			defer func() {
 				<-pool.LimtChan
 			}()
-		}()
+		}(i)
                 */
 	}
 	time.Sleep(time.Second * 20) //防止主线程提前退出，死循环可以忽略
