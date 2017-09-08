@@ -192,20 +192,20 @@ func main() {
 
 	}()
 	//建立线程池
-	pool := grtm.NewPool(2)
+	pool := grtm.NewPool(10)
 
-	for i := 100; i > 1; i-- {
+	for i := 100; i >= 1; i-- {
 		fmt.Println("I=", i)
 		//通过通道来限制goroutine 数量，下面这一行不要忘记了
-		pool.LimtChan <- true //importan
-		pool.AddTask(Download, i, "test")
+		pool.LimitChan <- true //importan
+		pool.AddTask(Download, i, "test", "name")
 		/*如果你觉得上面传参数比较麻烦，那么可以把
 		pool.AddTask(Download, i, "test")
 		替换为
 		go func(i int, str string) {
 			Download2(i, str)
 			defer func() {
-				<-pool.LimtChan
+				<-pool.LimitChan
 			}()
 		}(i, "test")
 		*/
@@ -216,12 +216,13 @@ func main() {
 
 func Download(args ...interface{}) {
 	time.Sleep(2 * time.Second)
-	fmt.Printf("Download:%d =>%s \n", args[0].([]interface{})[0].(int), args[0].([]interface{})[1].(string))
+	fmt.Printf("Download:%d =>%s =>%s \n", args[0].([]interface{})[0].(int), args[0].([]interface{})[1].(string), args[0].([]interface{})[2].(string))
 }
 func Download2(i int, str string) {
 	time.Sleep(2 * time.Second)
 	fmt.Printf("Download:%d =>%s \n", i, str)
 }
+
 
 ```
 ```bash

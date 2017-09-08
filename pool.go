@@ -1,9 +1,9 @@
 package grtm
 
 type Pool struct {
-	PoolNum  int
-	Queue    chan Command
-	LimtChan chan bool
+	PoolNum   int
+	Queue     chan Command
+	LimitChan chan bool
 }
 type Command struct {
 	Func interface{}
@@ -13,7 +13,7 @@ type Command struct {
 func NewPool(Num int) *Pool {
 	pool := &Pool{}
 	pool.PoolNum = Num
-	pool.LimtChan = make(chan bool, Num)
+	pool.LimitChan = make(chan bool, Num)
 	pool.Queue = make(chan Command)
 
 	go func() {
@@ -30,7 +30,7 @@ func NewPool(Num int) *Pool {
 						cmd.Func.(func())()
 					}
 					defer func() {
-						<-pool.LimtChan
+						<-pool.LimitChan
 					}()
 				}(cmd)
 			}
