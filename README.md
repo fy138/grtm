@@ -1,11 +1,11 @@
 # about grtm 
-[![Build Status](https://travis-ci.org/scottkiss/grtm.svg?branch=master)](https://travis-ci.org/scottkiss/grtm)
+[![Build Status](https://travis-ci.org/fy138/grtm.svg?branch=master)](https://travis-ci.org/fy138/grtm)
 
 grtm is a tool to manage golang goroutines.use this can start or stop a long loop goroutine.
 
 ## Getting started
 ```bash
-go get github.com/scottkiss/grtm
+go get github.com/fy138/grtm
 ```
 
 ## Create normal goroutine
@@ -15,7 +15,7 @@ package main
 
 import (
         "fmt"
-        "github.com/scottkiss/grtm"
+        "github.com/fy138/grtm"
         "time"
        )
 
@@ -39,7 +39,7 @@ package main
 
 import (
         "fmt"
-        "github.com/scottkiss/grtm"
+        "github.com/fy138/grtm"
         "time"
        )
 
@@ -68,7 +68,7 @@ package main
 
 import (
         "fmt"
-        "github.com/scottkiss/grtm"
+        "github.com/fy138/grtm"
         "time"
        )
 
