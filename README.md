@@ -170,7 +170,7 @@ hello+2
 hello+1
 hello+2
 ```
-增加线程数量限制
+增加线程池功能，限制任务的线程数量
 ```golang
 package main
 
