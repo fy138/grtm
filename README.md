@@ -229,23 +229,93 @@ func Download2(i int, str string) {
 >grtm_test3.exe
 I= 100
 I= 99
-go goroutines: 3
 I= 98
-go goroutines: 5
-Download:100 =>test
 I= 97
-Download:99 =>test
 I= 96
-go goroutines: 5
-go goroutines: 5
-Download:98 =>test
 I= 95
-Download:97 =>test
 I= 94
-go goroutines: 5
-go goroutines: 5
-Download:96 =>test
 I= 93
-Download:95 =>test
 I= 92
+I= 91
+I= 90
+go goroutines: 3
+go goroutines: 13
+Download:100 =>test =>name
+I= 89
+Download:98 =>test =>name
+I= 88
+Download:99 =>test =>name
+I= 87
+Download:97 =>test =>name
+I= 86
+Download:93 =>test =>name
+I= 85
+Download:96 =>test =>name
+I= 84
+Download:91 =>test =>name
+I= 83
+Download:95 =>test =>name
+I= 82
+Download:92 =>test =>name
+I= 81
+Download:94 =>test =>name
+I= 80
+go goroutines: 13
+go goroutines: 13
+Download:90 =>test =>name
+I= 79
+Download:89 =>test =>name
+I= 78
+Download:88 =>test =>name
+I= 77
+Download:87 =>test =>name
+I= 76
+Download:86 =>test =>name
+I= 75
+Download:85 =>test =>name
+I= 74
+Download:84 =>test =>name
+Download:82 =>test =>name
+Download:83 =>test =>name
+Download:81 =>test =>name
+go goroutines: 13
+I= 73
+I= 72
+I= 71
+I= 70
+go goroutines: 13
+Download:80 =>test =>name
+I= 69
+Download:79 =>test =>name
+I= 68
+Download:78 =>test =>name
+I= 67
+Download:77 =>test =>name
+I= 66
+Download:76 =>test =>name
+I= 65
+Download:75 =>test =>name
+I= 64
+Download:74 =>test =>name
+I= 63
+go goroutines: 13
+Download:73 =>test =>name
+I= 62
+Download:72 =>test =>name
+I= 61
+Download:71 =>test =>name
+I= 60
+go goroutines: 13
+Download:70 =>test =>name
+I= 59
+Download:69 =>test =>name
+I= 58
+Download:68 =>test =>name
+I= 57
+Download:67 =>test =>name
+I= 56
+Download:66 =>test =>name
+I= 55
+Download:65 =>test =>name
+I= 54
 ```
