@@ -2,7 +2,10 @@
 [![Build Status](https://travis-ci.org/fy138/grtm.svg?branch=master)](https://travis-ci.org/fy138/grtm)
 
 grtm is a tool to manage golang goroutines.use this can start or stop a long loop goroutine.
-
+*by fy138
+*增加了查询任务的数量
+*增加了当前任务列表
+*去掉了 nosignal 提示，方便使用在产品中
 ## Getting started
 ```bash
 go get github.com/fy138/grtm
@@ -116,5 +119,38 @@ stop myfunc goroutine
 gid[5577006791947779410] quit
 
 ```
+*fy138
+```golang
+package main
+
+import (
+	"fmt"
+	"runtime"
+	"time"
+
+	"github.com/fy138/grtm"
+)
+
+func myfunc(me interface{}) {
+	fmt.Println("hello+" + me.(string))
+	time.Sleep(time.Second * 2)
+}
+func main() {
+	gm := grtm.NewGrManager()
+
+	gm.NewLoopGoroutine("myfunc", myfunc, "1")
+	gm.NewLoopGoroutine("myfunc2", myfunc, "2")
+	fmt.Println("main function")
+	fmt.Printf("NumGoroutine:%d\n", runtime.NumGoroutine())
+
+	for {
+		for k, v := range gm.GetAllTask() {
+			fmt.Printf("task name:%s,task id:%d,task name2:%s\n", k, v.Gid, v.Name)
+		}
+		fmt.Printf("NumTask:%d\n", gm.GetTaskTotal())
+		time.Sleep(time.Second * 5)
+	}
+}
 
 
+```

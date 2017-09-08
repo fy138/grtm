@@ -16,11 +16,11 @@ func NewGrManager() *GrManager {
 }
 
 func (gm *GrManager) StopLoopGoroutine(name string) error {
-	stopChannel, ok := gm.grchannelMap.grchannels[name]
+	stopChannel, ok := gm.grchannelMap.Grchannels[name]
 	if !ok {
 		return fmt.Errorf("not found goroutine name :" + name)
 	}
-	gm.grchannelMap.grchannels[name].msg <- STOP + strconv.Itoa(int(stopChannel.gid))
+	gm.grchannelMap.Grchannels[name].Msg <- STOP + strconv.Itoa(int(stopChannel.Gid))
 	return nil
 }
 
@@ -33,10 +33,10 @@ func (gm *GrManager) NewLoopGoroutine(name string, fc interface{}, args ...inter
 		}
 		for {
 			select {
-			case info := <-this.grchannelMap.grchannels[name].msg:
+			case info := <-this.grchannelMap.Grchannels[name].Msg:
 				taskInfo := strings.Split(info, ":")
 				signal, gid := taskInfo[0], taskInfo[1]
-				if gid == strconv.Itoa(int(this.grchannelMap.grchannels[name].gid)) {
+				if gid == strconv.Itoa(int(this.grchannelMap.Grchannels[name].Gid)) {
 					if signal == "__P" {
 						fmt.Println("gid[" + gid + "] quit")
 						this.grchannelMap.unregister(name)
@@ -46,7 +46,7 @@ func (gm *GrManager) NewLoopGoroutine(name string, fc interface{}, args ...inter
 					}
 				}
 			default:
-				fmt.Println("no signal")
+				//fmt.Println("no signal")
 			}
 
 			if len(args) > 1 {
@@ -77,4 +77,10 @@ func (gm *GrManager) NewGoroutine(name string, fc interface{}, args ...interface
 		gm.grchannelMap.unregister(name)
 	}(name, fc, args...)
 
+}
+func (gm *GrManager) GetAllTask() map[string]*GoroutineChannel {
+	return gm.grchannelMap.Grchannels
+}
+func (gm *GrManager) GetTaskTotal() int {
+	return len(gm.grchannelMap.Grchannels)
 }

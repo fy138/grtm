@@ -11,39 +11,40 @@ const (
 )
 
 type GoroutineChannel struct {
-	gid  uint64
-	name string
-	msg  chan string
+	Gid  uint64
+	Name string
+	Msg  chan string
 }
 
 type GoroutineChannelMap struct {
 	mutex      sync.Mutex
-	grchannels map[string]*GoroutineChannel
+	Grchannels map[string]*GoroutineChannel
 }
 
 func (m *GoroutineChannelMap) unregister(name string) error {
 	m.mutex.Lock()
 	defer m.mutex.Unlock()
-	if _, ok := m.grchannels[name]; !ok {
+	if _, ok := m.Grchannels[name]; !ok {
 		return fmt.Errorf("goroutine channel not find: %q", name)
 	}
-	delete(m.grchannels, name)
+	delete(m.Grchannels, name)
 	return nil
 }
 
 func (m *GoroutineChannelMap) register(name string) error {
 	gchannel := &GoroutineChannel{
-		gid:  uint64(rand.Int63()),
-		name: name,
+		Gid:  uint64(rand.Int63()),
+		Name: name,
 	}
-	gchannel.msg = make(chan string)
+	gchannel.Msg = make(chan string)
 	m.mutex.Lock()
 	defer m.mutex.Unlock()
-	if m.grchannels == nil {
-		m.grchannels = make(map[string]*GoroutineChannel)
-	} else if _, ok := m.grchannels[gchannel.name]; ok {
-		return fmt.Errorf("goroutine channel already defined: %q", gchannel.name)
+	if m.Grchannels == nil {
+		m.Grchannels = make(map[string]*GoroutineChannel)
+	} else if _, ok := m.Grchannels[gchannel.Name]; ok {
+		fmt.Printf("goroutine channel already defined: %q\n", gchannel.Name)
+		return fmt.Errorf("goroutine channel already defined: %q", gchannel.Name)
 	}
-	m.grchannels[gchannel.name] = gchannel
+	m.Grchannels[gchannel.Name] = gchannel
 	return nil
 }
