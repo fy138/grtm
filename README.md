@@ -200,11 +200,11 @@ func main() {
 		pool.AddTask(func() {
 			Download(i)
 		})
-                /* 把
+                /* 把上面
  		pool.AddTask(func() {
 			Download(i)
 		})               
-                以下这种写法也可以的
+                替换为以下这种写法也可以的
                 go func() {
 			Download(i)
 			defer func() {
@@ -213,7 +213,7 @@ func main() {
 		}()
                 */
 	}
-	time.Sleep(time.Second * 20) //防止主线程提前退出
+	time.Sleep(time.Second * 20) //防止主线程提前退出，死循环可以忽略
 }
 
 func Download(url int) {
