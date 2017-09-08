@@ -200,6 +200,18 @@ func main() {
 		pool.AddTask(func() {
 			Download(i)
 		})
+                /* 把
+ 		pool.AddTask(func() {
+			Download(i)
+		})               
+                以下这种写法也可以的
+                go func() {
+			Download(i)
+			defer func() {
+				<-pool.LimtChan
+			}()
+		}()
+                */
 	}
 	time.Sleep(time.Second * 20) //防止主线程提前退出
 }
