@@ -192,56 +192,60 @@ func main() {
 
 	}()
 	//建立线程池
-	pool := grtm.NewPool(3)
+	pool := grtm.NewPool(2)
 
 	for i := 100; i > 1; i-- {
+		fmt.Println("I=", i)
 		//通过通道来限制goroutine 数量，下面这一行不要忘记了
 		pool.LimtChan <- true //importan
-		pool.AddTask(func() {
-			Download(i)
-		})
-                /* 把上面
- 		pool.AddTask(func() {
-			Download(i)
-		})               
-                替换为以下这种写法也可以的
-                go func(i int) {
-			Download(i)
+		pool.AddTask(Download, i, "test"
+		)
+		/*如果你觉得上面传参数比较麻烦，那么可以把
+		pool.AddTask(Download, i, "test")
+		替换为
+		go func(i int, str string) {
+			Download2(i, str)
 			defer func() {
 				<-pool.LimtChan
 			}()
-		}(i)
-                */
+		}(i, "test")
+		*/
+
 	}
-	time.Sleep(time.Second * 20) //防止主线程提前退出，死循环可以忽略
+	time.Sleep(time.Second * 20) //防止主线程提前退出
 }
 
-func Download(url int) {
-	time.Sleep(1 * time.Second)
-	fmt.Printf("Download:%d\n", url)
+func Download(args ...interface{}) {
+	time.Sleep(2 * time.Second)
+	fmt.Printf("Download:%d =>%s \n", args[0].([]interface{})[0].(int), args[0].([]interface{})[1].(string))
 }
+func Download2(i int, str string) {
+	time.Sleep(2 * time.Second)
+	fmt.Printf("Download:%d =>%s \n", i, str)
+}
+
 ```
 ```bash
 >grtm_test3.exe
-go goroutines: 6
-go goroutines: 6
-Download:97
-Download:97
-Download:97
-go goroutines: 6
-Download:96
-Download:95
-Download:94
-go goroutines: 6
-Download:93
-Download:92
-Download:91
-go goroutines: 6
-Download:90
-Download:89
-Download:88
-go goroutines: 6
-Download:87
-Download:86
-Download:85
+I= 100
+I= 99
+go goroutines: 3
+I= 98
+go goroutines: 5
+Download:100 =>test
+I= 97
+Download:99 =>test
+I= 96
+go goroutines: 5
+go goroutines: 5
+Download:98 =>test
+I= 95
+Download:97 =>test
+I= 94
+go goroutines: 5
+go goroutines: 5
+Download:96 =>test
+I= 93
+Download:95 =>test
+I= 92
 ```
