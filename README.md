@@ -6,6 +6,7 @@ grtm is a tool to manage golang goroutines.use this can start or stop a long loo
 * 增加了查询任务的数量
 * 增加了当前任务列表
 * 去掉了 nosignal 提示，方便使用在产品中
+* 增加线程池功能
 ## Getting started
 ```bash
 go get github.com/fy138/grtm
@@ -168,4 +169,43 @@ hello+1
 hello+2
 hello+1
 hello+2
+```
+增加线程数量限制
+```golang
+package main
+
+import (
+	"fmt"
+	"runtime"
+	"time"
+
+	"github.com/fy138/grtm"
+)
+
+func main() {
+	go func() {
+		for {
+			//get  goroutine total
+			fmt.Println("go goroutines:", runtime.NumGoroutine())
+			time.Sleep(time.Second * 1)
+		}
+
+	}()
+	//建立线程池
+	pool := grtm.NewPool(3)
+
+	for i := 100; i > 1; i-- {
+		//通过通道来限制goroutine 数量，下面这一行不要忘记了
+		pool.LimtChan <- true //importan
+		pool.AddTask(func() {
+			Download(i)
+		})
+	}
+	time.Sleep(time.Second * 20) //防止主线程提前退出
+}
+
+func Download(url int) {
+	time.Sleep(1 * time.Second)
+	fmt.Printf("Download:%d\n", url)
+}
 ```
