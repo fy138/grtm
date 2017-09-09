@@ -205,6 +205,7 @@ func main() {
 		pool_2.LimitChan <- true //importan
 		go func(i int, str string) {
 			Download2(i, str)
+			//函数执行完释放通道
 			defer func() {
 				<-pool_2.LimitChan
 			}()
@@ -222,6 +223,7 @@ func Download2(i int, str string) {
 	time.Sleep(2 * time.Second)
 	fmt.Printf("%s => %d \n", str, i)
 }
+
 
 ```
 ```bash
