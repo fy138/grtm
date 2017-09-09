@@ -74,6 +74,7 @@ func (gm *GrManager) NewGoroutine(name string, fc interface{}, args ...interface
 		//register channel
 		err := gm.grchannelMap.register(n)
 		if err != nil {
+			gm.ErrChan <- err
 			return
 		}
 		if len(args) > 1 {
@@ -83,7 +84,11 @@ func (gm *GrManager) NewGoroutine(name string, fc interface{}, args ...interface
 		} else {
 			fc.(func())()
 		}
-		gm.grchannelMap.unregister(name)
+		err = gm.grchannelMap.unregister(name)
+		if err != nil {
+			gm.ErrChan <- err
+			return
+		}
 	}(name, fc, args...)
 
 }
