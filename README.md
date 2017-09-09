@@ -192,23 +192,23 @@ func main() {
 
 	}()
 	//建立线程池
-	pool := grtm.NewPool(10)
-
+	pool_1 := grtm.NewPool(3)
+	pool_2 := grtm.NewPool(2)
 	for i := 100; i >= 1; i-- {
 		fmt.Println("I=", i)
-		//通过通道来限制goroutine 数量，下面这一行不要忘记了
-		pool.LimitChan <- true //importan
-		pool.AddTask(Download, i, "test", "name")
-		/*如果你觉得上面传参数比较麻烦，那么可以把
-		pool.AddTask(Download, i, "test")
-		替换为
+		//通过通道来限制goroutine 数量
+		/* 下面是第一种调用方法 */
+		pool_1.LimitChan <- true //importan
+		pool_1.AddTask(Download, i, "Download_1")
+
+		/* 下面是第二种调用方法 */
+		pool_2.LimitChan <- true //importan
 		go func(i int, str string) {
 			Download2(i, str)
 			defer func() {
-				<-pool.LimitChan
+				<-pool_2.LimitChan
 			}()
-		}(i, "test")
-		*/
+		}(i, "Download_2")
 
 	}
 	time.Sleep(time.Second * 20) //防止主线程提前退出
@@ -216,106 +216,46 @@ func main() {
 
 func Download(args ...interface{}) {
 	time.Sleep(2 * time.Second)
-	fmt.Printf("Download:%d =>%s =>%s \n", args[0].([]interface{})[0].(int), args[0].([]interface{})[1].(string), args[0].([]interface{})[2].(string))
+	fmt.Printf("%s => %d \n", args[0].([]interface{})[1].(string), args[0].([]interface{})[0].(int))
 }
 func Download2(i int, str string) {
 	time.Sleep(2 * time.Second)
-	fmt.Printf("Download:%d =>%s \n", i, str)
+	fmt.Printf("%s => %d \n", str, i)
 }
-
 
 ```
 ```bash
->grtm_test3.exe
 I= 100
+go goroutines: 4
 I= 99
 I= 98
+go goroutines: 9
+Download_2 => 100
 I= 97
+Download_1 => 100
+go goroutines: 9
+Download_2 => 99
 I= 96
+Download_1 => 99
+Download_1 => 98
+go goroutines: 8
+Download_2 => 98
 I= 95
+Download_1 => 97
+go goroutines: 8
+Download_2 => 97
 I= 94
+Download_1 => 96
+go goroutines: 8
+Download_2 => 96
 I= 93
+Download_1 => 95
+go goroutines: 8
+Download_2 => 95
 I= 92
+Download_1 => 94
+go goroutines: 8
+Download_2 => 94
 I= 91
-I= 90
-go goroutines: 3
-go goroutines: 13
-Download:100 =>test =>name
-I= 89
-Download:98 =>test =>name
-I= 88
-Download:99 =>test =>name
-I= 87
-Download:97 =>test =>name
-I= 86
-Download:93 =>test =>name
-I= 85
-Download:96 =>test =>name
-I= 84
-Download:91 =>test =>name
-I= 83
-Download:95 =>test =>name
-I= 82
-Download:92 =>test =>name
-I= 81
-Download:94 =>test =>name
-I= 80
-go goroutines: 13
-go goroutines: 13
-Download:90 =>test =>name
-I= 79
-Download:89 =>test =>name
-I= 78
-Download:88 =>test =>name
-I= 77
-Download:87 =>test =>name
-I= 76
-Download:86 =>test =>name
-I= 75
-Download:85 =>test =>name
-I= 74
-Download:84 =>test =>name
-Download:82 =>test =>name
-Download:83 =>test =>name
-Download:81 =>test =>name
-go goroutines: 13
-I= 73
-I= 72
-I= 71
-I= 70
-go goroutines: 13
-Download:80 =>test =>name
-I= 69
-Download:79 =>test =>name
-I= 68
-Download:78 =>test =>name
-I= 67
-Download:77 =>test =>name
-I= 66
-Download:76 =>test =>name
-I= 65
-Download:75 =>test =>name
-I= 64
-Download:74 =>test =>name
-I= 63
-go goroutines: 13
-Download:73 =>test =>name
-I= 62
-Download:72 =>test =>name
-I= 61
-Download:71 =>test =>name
-I= 60
-go goroutines: 13
-Download:70 =>test =>name
-I= 59
-Download:69 =>test =>name
-I= 58
-Download:68 =>test =>name
-I= 57
-Download:67 =>test =>name
-I= 56
-Download:66 =>test =>name
-I= 55
-Download:65 =>test =>name
-I= 54
+
 ```
