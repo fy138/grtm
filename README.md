@@ -280,7 +280,7 @@ func myfunc(me interface{}) {
 }
 func main() {
 	gm := grtm.NewGrManager()
-	//在创建gm后新建一个进程接收出错信息
+	//在创建gm后新建一个协程接收出错信息
 	go func(gm *grtm.GrManager) {
 		for {
 			select {
