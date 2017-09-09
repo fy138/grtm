@@ -2,11 +2,12 @@
 [![Build Status](https://travis-ci.org/fy138/grtm.svg?branch=master)](https://travis-ci.org/fy138/grtm)
 
 grtm is a tool to manage golang goroutines.use this can start or stop a long loop goroutine.
-* by fy138
+* by fy138  请看完文档再使用
 * 增加了查询任务的数量
 * 增加了当前任务列表
 * 去掉了 nosignal 提示，方便使用在产品中
 * 增加线程池功能
+* 增加报错通道和通知通道
 ## Getting started
 ```bash
 go get github.com/fy138/grtm
@@ -260,4 +261,80 @@ go goroutines: 8
 Download_2 => 94
 I= 91
 
+```
+出错 和 通知
+```golang
+package main
+
+import (
+	"fmt"
+	//	"runtime"
+	"time"
+
+	"github.com/fy138/grtm"
+)
+
+func myfunc(me interface{}) {
+	fmt.Println("hello+" + me.(string))
+	time.Sleep(time.Second * 2)
+}
+func main() {
+	gm := grtm.NewGrManager()
+	//在创建gm后新建一个进程接收出错信息
+	go func(gm *grtm.GrManager) {
+		for {
+			select {
+			case err := <-gm.ErrChan:
+				fmt.Println("Received error:", err.Error())
+			case notify := <-gm.NotiChan:
+				fmt.Println("Received Notify:", notify)
+			}
+		}
+	}(gm)
+
+	gm.NewLoopGoroutine("myfunc", myfunc, "1")
+	gm.NewLoopGoroutine("myfunc2", myfunc, "2")
+	time.Sleep(time.Second * 3)
+
+	gm.StopLoopGoroutine("aaaaaa")
+	time.Sleep(time.Second * 3)
+
+	gm.StopLoopGoroutine("myfunc2")
+	time.Sleep(time.Second * 3)
+
+	gm.NewLoopGoroutine("myfunc", myfunc, "1")
+	time.Sleep(time.Second * 3)
+
+	for {
+		for k, v := range gm.GetAllTask() {
+			fmt.Printf("task name:%s,task id:%d,task name2:%s\n", k, v.Gid, v.Name)
+		}
+		fmt.Printf("NumTask:%d\n", gm.GetTaskTotal())
+		time.Sleep(time.Second * 1)
+	}
+}
+
+```
+output
+```bash
+hello+1
+hello+2
+hello+1
+hello+2
+Received error: not found goroutine name :aaaaaa
+hello+1
+hello+2
+hello+1
+Received Notify: gid[1597969999]quit
+hello+1
+Received error: goroutine channel already defined: "myfunc"
+hello+1
+hello+1
+task name:myfunc,task id:5577006791947779410,task name2:myfunc
+NumTask:1
+task name:myfunc,task id:5577006791947779410,task name2:myfunc
+NumTask:1
+hello+1
+task name:myfunc,task id:5577006791947779410,task name2:myfunc
+NumTask:1
 ```

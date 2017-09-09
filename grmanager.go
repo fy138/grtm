@@ -8,20 +8,25 @@ import (
 
 type GrManager struct {
 	grchannelMap *GoroutineChannelMap
+	ErrChan      chan error
+	NotiChan     chan string
 }
 
 func NewGrManager() *GrManager {
 	gm := &GoroutineChannelMap{}
-	return &GrManager{grchannelMap: gm}
+	errchan := make(chan error)
+	notichan := make(chan string)
+	return &GrManager{grchannelMap: gm, ErrChan: errchan, NotiChan: notichan}
 }
 
-func (gm *GrManager) StopLoopGoroutine(name string) error {
+func (gm *GrManager) StopLoopGoroutine(name string) {
 	stopChannel, ok := gm.grchannelMap.Grchannels[name]
 	if !ok {
-		return fmt.Errorf("not found goroutine name :" + name)
+		gm.ErrChan <- fmt.Errorf("not found goroutine name :" + name)
+		return
 	}
 	gm.grchannelMap.Grchannels[name].Msg <- STOP + strconv.Itoa(int(stopChannel.Gid))
-	return nil
+	//return nil
 }
 
 func (gm *GrManager) NewLoopGoroutine(name string, fc interface{}, args ...interface{}) {
@@ -29,6 +34,7 @@ func (gm *GrManager) NewLoopGoroutine(name string, fc interface{}, args ...inter
 		//register channel
 		err := this.grchannelMap.register(n)
 		if err != nil {
+			gm.ErrChan <- err
 			return
 		}
 		for {
@@ -38,11 +44,14 @@ func (gm *GrManager) NewLoopGoroutine(name string, fc interface{}, args ...inter
 				signal, gid := taskInfo[0], taskInfo[1]
 				if gid == strconv.Itoa(int(this.grchannelMap.Grchannels[name].Gid)) {
 					if signal == "__P" {
-						fmt.Println("gid[" + gid + "] quit")
-						this.grchannelMap.unregister(name)
+						gm.NotiChan <- fmt.Sprintf("gid[%s]quit", gid)
+						err := this.grchannelMap.unregister(name)
+						if err != nil {
+							gm.ErrChan <- err
+						}
 						return
 					} else {
-						fmt.Println("unknown signal")
+						gm.ErrChan <- fmt.Errorf("unknown signal")
 					}
 				}
 			default:

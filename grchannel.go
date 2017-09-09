@@ -42,7 +42,7 @@ func (m *GoroutineChannelMap) register(name string) error {
 	if m.Grchannels == nil {
 		m.Grchannels = make(map[string]*GoroutineChannel)
 	} else if _, ok := m.Grchannels[gchannel.Name]; ok {
-		fmt.Printf("goroutine channel already defined: %q\n", gchannel.Name)
+		//fmt.Printf("goroutine channel already defined: %q\n", gchannel.Name)
 		return fmt.Errorf("goroutine channel already defined: %q", gchannel.Name)
 	}
 	m.Grchannels[gchannel.Name] = gchannel
