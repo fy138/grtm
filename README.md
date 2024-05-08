@@ -1,3 +1,6 @@
+# please redirect to new project
+[simple goroutine manager-点这里](https://github.com/fy138/sgrm)
+
 # about grtm 
 [![Build Status](https://travis-ci.org/fy138/grtm.svg?branch=master)](https://travis-ci.org/fy138/grtm)
 
