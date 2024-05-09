@@ -1,4 +1,4 @@
-# please redirect to new project
+# please move to new project
 [simple goroutine manager-点这里](https://github.com/fy138/sgrm)
 
 # about grtm 
